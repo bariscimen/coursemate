@@ -1,0 +1,37 @@
+/*@media (min-width: 768px) {
+            /!*Should be 992px*!/
+            .container {
+                width: 970px;
+            }
+        }
+
+        @media (min-width: 992px) {
+            /!*Should be 1200px*!/
+            .container {
+                width: 1170px;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .container {
+                width: 1570px;
+            }
+        }*/
+
+.cell {
+    overflow: hidden;
+    font-size: 11px;
+    resize: none;
+    width: 115px;
+    height: 50px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+textarea:empty {
+    background-color: #FFFFC0;
+}
+textarea:not(:empty) {
+    background-color: #C4FFC0;
+}
