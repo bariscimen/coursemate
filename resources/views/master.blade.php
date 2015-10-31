@@ -213,26 +213,12 @@
             //$scope.$apply();
         };
 
-        /* console examples
-
-         ADD Course
-         angular.element($('#app')).scope().addToList({
-         "code": "IE 312.01",
-         "name": "ADVANCED PROGRAMMING",
-         "instructor": "TAŞKIN",
-         "credits": "3/6",
-         "days": "MMFF",
-         "hours": "5678",
-         "rooms": "HKA302 | HKB105 | HKB10 | HKB108"
-         });
-         angular.element($('#app')).scope().$apply();
-
-
-         */
-
 
         $http.get('courses.json').success(function (data) {
             $scope.courses = data;
+        });
+        $http.get('news.json').success(function (data) {
+            $scope.news = data;
         });
     });
 </script>
