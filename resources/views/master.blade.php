@@ -28,9 +28,9 @@
 
 <body id="app" ng-controller="appController">
 
+@include('navbar')
 <div class="container">
 
-    @include('navbar')
 
     @yield('content')
 
