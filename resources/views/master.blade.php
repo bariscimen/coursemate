@@ -45,6 +45,13 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 <script>
+    $(document).ready(function(){
+        $( document ).on( 'focus', ':input', function(){
+            $( this ).attr( 'autocomplete', 'off' );
+        });
+    });
+</script>
+<script>
     //var courseMate = angular.module('courseMate', ['ngAnimate', 'ui.bootstrap']);
     var courseMate = angular.module('courseMate', ['ui.bootstrap']);
     courseMate.controller('appController', function ($scope, $http) {
@@ -153,6 +160,8 @@
             $scope.updateTable();
         };
 
+        Array.prototype.clean=function(){return this.filter(function(e){return (typeof  e !=='undefined')&&(e!= null)&&(e!='')})}
+
         $scope.updateTable = function () {
             $scope.table = {};
 
@@ -161,7 +170,7 @@
                 //var c_days = course.days.split('');
                 var c_days = [];
                 var c_hours = course.hours.split('');
-                var c_rooms = course.rooms.split('|');
+                var c_rooms = course.rooms.split('|').clean();
                 angular.forEach(course.days.split(''), function (c_day, k) {
                     if(c_day == 't'){
                         c_days[c_days.length - 1] = 'St';
@@ -171,7 +180,6 @@
                         c_days.push(c_day);
                     }
                 });
-                console.log(c_days);
 
                 angular.forEach($scope.days, function (day, k) {
                     angular.forEach($scope.hours, function (hour, k2) {
@@ -182,14 +190,15 @@
                             if(c_hours[c_days.indexOf(day.code)] == hour.code){
                                 c_days[c_days.indexOf(day.code)] = 'X';
 
+                                //console.log(typeof c_rooms[c_hours.indexOf(hour.code)]);
                                 if($scope.table[name]){
-                                    if(c_rooms[c_hours.indexOf(hour.code)].trim().length > 0){
+                                    if(c_rooms.length > 0 && c_rooms[c_hours.indexOf(hour.code)].trim().length > 0){
                                         $scope.table[name] += "\n"+course.code+'['+c_rooms[c_hours.indexOf(hour.code)].trim()+']';
                                     }else{
                                         $scope.table[name] += "\n"+course.code;
                                     }
                                 }else{
-                                    if(c_rooms[c_hours.indexOf(hour.code)].trim().length > 0){
+                                    if(c_rooms.length > 0 && c_rooms[c_hours.indexOf(hour.code)].trim().length > 0){
                                         $scope.table[name] = course.code+'['+c_rooms[c_hours.indexOf(hour.code)].trim()+']';
                                     }else{
                                         $scope.table[name] = course.code;

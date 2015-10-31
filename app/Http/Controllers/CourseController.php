@@ -16,13 +16,14 @@ class CourseController extends Controller
      */
     public function index()
     {
+        //dd(count(null));
         $time1 = time();
         $courses = array();
         $obikas_data = array();
         $client = new Client();
         $obikas = "http://registration.boun.edu.tr";
 
-        $crawler = $client->request('GET', $obikas.'/schedule.htm');
+        $crawler = $client->request('GET', $obikas . '/schedule.htm');
 
         $tmp = $crawler->filter('option')->each(function ($node) {
             return ($node->extract(array('value'))[0]);
@@ -44,7 +45,7 @@ class CourseController extends Controller
         });
 
         foreach ($tmp as $value) {
-            $crawler2 = $client->request('GET', $obikas.$value);
+            $crawler2 = $client->request('GET', $obikas . $value);
 
             $tmp = $crawler2->filter('body > font > table > tr')->each(function ($node) {
                 $tmp2 = $node->filter('td')->each(function ($node2) {
@@ -57,35 +58,97 @@ class CourseController extends Controller
             $column_names = $tmp[2];
             //$obikas_data[$tmp[0][1]][$tmp[1][1]];
 
-            foreach (array_slice($tmp, 3) as $value) {
+            foreach (array_slice($tmp, 3) as $value2) {
                 $tmp_array = null;
-                foreach ($value as $key => $cell) {
+                foreach ($value2 as $key => $cell) {
                     //$obikas_data[$tmp[0][1]][$tmp[1][1]][$value[0]][$column_names[$key]] = trim(trim($cell), chr(0xC2).chr(0xA0));
                     //$tmp_array[$column_names[$key]] = trim(trim($cell), chr(0xC2).chr(0xA0));
-                    if($column_names[$key] == "Code.Sec")
-                        $tmp_array['code'] = trim(trim($cell), chr(0xC2).chr(0xA0));
-                    if($column_names[$key] == "Name")
-                        $tmp_array['name'] = trim(trim($cell), chr(0xC2).chr(0xA0));
-                    if($column_names[$key] == "Instr.")
-                        $tmp_array['instructor'] = trim(trim($cell), chr(0xC2).chr(0xA0));
-                    if($column_names[$key] == "Cr.")
-                        $tmp_array['credits'] = trim(trim($cell), chr(0xC2).chr(0xA0));
-                    if($column_names[$key] == "Ects")
-                        $tmp_array['credits'] .= '/'.trim(trim($cell), chr(0xC2).chr(0xA0));
-                    if($column_names[$key] == "Days")
-                        $tmp_array['days'] = trim(trim($cell), chr(0xC2).chr(0xA0));
-                    if($column_names[$key] == "Hours")
-                        $tmp_array['hours'] = trim(trim($cell), chr(0xC2).chr(0xA0));
-                    if($column_names[$key] == "Rooms")
-                        $tmp_array['rooms'] = trim(trim($cell), chr(0xC2).chr(0xA0));
+                    if ($column_names[$key] == "Code.Sec")
+                        $tmp_array['code'] = trim(trim($cell), chr(0xC2) . chr(0xA0));
+                    if ($column_names[$key] == "Name")
+                        $tmp_array['name'] = trim(trim($cell), chr(0xC2) . chr(0xA0));
+                    if ($column_names[$key] == "Instr.")
+                        $tmp_array['instructor'] = trim(trim($cell), chr(0xC2) . chr(0xA0));
+                    if ($column_names[$key] == "Cr.")
+                        $tmp_array['credits'] = trim(trim($cell), chr(0xC2) . chr(0xA0));
+                    if ($column_names[$key] == "Ects")
+                        $tmp_array['credits'] .= '/' . trim(trim($cell), chr(0xC2) . chr(0xA0));
+                    if ($column_names[$key] == "Days")
+                        $tmp_array['days'] = trim(trim($cell), chr(0xC2) . chr(0xA0));
+                    if ($column_names[$key] == "Hours")
+                        $tmp_array['hours'] = trim(trim($cell), chr(0xC2) . chr(0xA0));
+                    if ($column_names[$key] == "Rooms")
+                        $tmp_array['rooms'] = trim(trim($cell), chr(0xC2) . chr(0xA0));
                 }
                 $courses[] = $tmp_array;
+                /*if ($tmp_array['name'] == 'LAB' || $tmp_array['name'] == 'P.S.') {
+                    //$tmp_array['code'] = end($courses)['code'] . ' ' . $tmp_array['name'];
+                    $tmp_array['code'] = $tmp_array['code'] . ' ' . $tmp_array['name'];
+                    $tmp_array['credits'] = '';
+                    $tmp_array['name'] = end($courses)['name'];
+                    $tmp_psorlab[] = $tmp_array;
+                }else{
+                    if(count($tmp_psorlab)>0){
+                        foreach ($tmp_psorlab as $psorlab) {
+                            $courses[] = $psorlab;
+                        }
+                        $tmp_psorlab = array();
+                    }else{
+                        $courses[] = $tmp_array;
+                    }
+                }*/
+                /*if($tmp_array['name'] == 'LAB' || $tmp_array['name'] == 'P.S.'){
+                    $tmp_psorlab[] = $tmp_array;
+                }else{
+                    $tmp_end = end($courses);
+                    if(count($tmp_psorlab) == 1){
+                        $tmp_psorlab[0]['code'] = $tmp_end['code'].' '.$tmp_psorlab[0]['name'];
+                        $tmp_psorlab[0]['credits'] = '';
+                        $tmp_psorlab[0]['name'] = $tmp_end['name'];
+                        $courses[] = $tmp_psorlab[0];
+                    }elseif(count($tmp_psorlab) > 1){
+                        $i = 1;
+                        foreach ($tmp_psorlab as $psorlab) {
+                            $psorlab['code'] = $tmp_end['code'].' '.$psorlab['name'].' '.$i++;
+                            $psorlab['credits'] = '';
+                            $psorlab['name'] = $tmp_end['name'];
+                            $courses[] = $psorlab;
+                        }
+                    }else(count($tmp_psorlab) == 0){
+                        $courses[] = $tmp_array;
+                    }
+                    $tmp_psorlab = null;
+                }*/
                 //$obikas_data[$tmp[0][1]][$tmp[1][1]][$value[0]] = $tmp_array;
             }
         }
-        file_put_contents(public_path().'/courses.json', json_encode($courses));
 
-        echo ((time() - $time1)/60).' dakika sürdü. Toplam kayıt sayısı: '+count($courses);
+        $data = null;
+        $tmp_psorlab = null;
+        $tmp_course = null;
+        foreach ($courses as $course) {
+            if ($course['name'] == 'LAB' || $course['name'] == 'P.S.') {
+                $tmp_psorlab[] = $course;
+            } else {
+                if(count($tmp_psorlab) > 0){
+                    $i = 1;
+                    foreach ($tmp_psorlab as $psorlab) {
+                        $psorlab['code'] = $tmp_course['code'].' '.$psorlab['name'].' '.$i++;
+                        $psorlab['credits'] = '';
+                        $psorlab['name'] = $tmp_course['name'];
+                        $data[] = $psorlab;
+                    }
+                    $tmp_psorlab = null;
+                }
+                $data[] = $course;
+                $tmp_course = $course;
+            }
+        }
+
+
+        file_put_contents(public_path() . '/courses.json', json_encode($data));
+
+        echo ((time() - $time1) / 60) . ' dakika sürdü. Toplam kayıt sayısı: ' . count($courses);
         //$crawler = $crawler->filter('body > table > tbody > tr > td');
 
         //dd($crawler->text());
@@ -105,7 +168,7 @@ class CourseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -116,7 +179,7 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -127,7 +190,7 @@ class CourseController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -138,8 +201,8 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -150,7 +213,7 @@ class CourseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
