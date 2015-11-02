@@ -1,6 +1,6 @@
 ## **CourseMate** [BOUN Course Planner Application]
 
-CourseMate is a web application which has been developing to help Boğaziçi University Students to prepare their course schedule easily. The application automatically fetchs the course list from OBIKAS(registration.boun.edu.tr) and enables users to create their own schedule table.
+CourseMate is a web application which has been developing to help Boğaziçi University Students to prepare their course schedule easily. The application automatically fetches the course list from OBIKAS(registration.boun.edu.tr) and enables users to create their own schedule table.
 
 ##Demo
 You can visit: http://coursemate.bariscimen.com/
