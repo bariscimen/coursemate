@@ -22,4 +22,3 @@ This program is free software; you can redistribute it and/or modify it under th
  - Bootstrap Framework v3
  - jQuery v2.*
  - AngularJS v1.*
- - angular-ui-bootstrap
