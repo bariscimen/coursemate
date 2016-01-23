@@ -1,4 +1,8 @@
 /vendor
+<<<<<<< HEAD
+=======
+/.idea
+>>>>>>> 1e1b6b3c25dc5571a9853e80a3b026a78b2c99ec
 /node_modules
 Homestead.yaml
 Homestead.json
