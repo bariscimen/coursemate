@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::resource('course', 'CourseController');
+Route::resource('courseBarisBaris', 'CourseController');
